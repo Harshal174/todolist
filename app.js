@@ -12,7 +12,10 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 //  mongodb://localhost:27017
-mongoose.connect("mongodb+srv://admin-harshal:qJZARUUqvSKbdoKJ@cluster0.mx6bkrb.mongodb.net/todolistDB", {useNewUrlParser: true});
+async function run() {
+  await mongoose.connect('mongodb+srv://admin-harshal:qJZARUUqvSKbdoKJ@cluster0.mx6bkrb.mongodb.net/todolistDB',{useNewUrlParser: true});
+}
+// mongoose.connect("mongodb+srv://admin-harshal:qJZARUUqvSKbdoKJ@cluster0.mx6bkrb.mongodb.net/todolistDB", {useNewUrlParser: true});
 
 const itemsSchema = {
     name:String
@@ -191,5 +194,6 @@ app.post("/delete",(req,res)=>{
 
 
 app.listen(process.env.PORT||3000,()=>{
+    run();
     console.log("Server started on port 3000!!!");
 })
