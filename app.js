@@ -63,7 +63,7 @@ app.get("/",(req,res)=>{
        const find= async()=>{
         try{
             const data = await Item.find({});
-            console.log(data)
+            // console.log(data)
             if(data.length===0){
                 Item.insertMany(defaultItems).then(function(err){
                     if(err){
@@ -90,7 +90,7 @@ app.get("/:customListName",(req,res)=>{
     const findOne = async()=>{
         try{
             const data1=await List.findOne({name: customListName});
-            console.log(data1);  
+            // console.log(data1);  
             if(data1===null){
                 const list = new List({
                     name: customListName,
