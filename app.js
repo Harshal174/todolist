@@ -136,6 +136,7 @@ app.post("/", (req,res)=>{
      
 
      if (!cleanedItemName) {
+        console.log("Empty");
         return res.redirect("/" + (listName === "Today" ? "" : listName));  // Redirect to the correct list
     }else{
         const item = new Item({
