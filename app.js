@@ -40,6 +40,18 @@ const Item3= new Item({
 
 const defaultItems=[Item1,Item2,Item3];
 
+const completedTaskSchema={
+    listName:String,
+    name:String,
+    completedAt:{
+        type:Date,
+        default:Date.now
+    }
+};
+
+const CompletedTask=mongoose.model("CompletedTask",completedTaskSchema);
+
+
 const listSchema = {
     name: String,
     items: [itemsSchema]
@@ -60,36 +72,87 @@ const List = mongoose.model("List",listSchema);
 // let day = today.toLocaleDateString("en-US",options);
 
 
-app.get("/",(req,res)=>{ 
-       const find= async()=>{
-        try{
-            const data = await Item.find({});
-            // console.log(data)
-            if(data.length===0){
-                Item.insertMany(defaultItems).then(function(err){
-                    if(err){
-                        console.error(err);
-                        res.status(500).send("Internal Server Error");
-                    }else{
-                        console.log("Success!!!");
-                    }
-                })
-                res.redirect("/");
-            }else{
-                res.render("list",{listTitle: "Today" , newListItems: data}); 
-            } 
-        }catch(err){
-            console.error(err);
-            res.status(500).send("Internal Server Error");
+
+
+app.get('/',(req,res)=>{
+    res.render('homepage');
+});
+app.post('/search',async(req,res)=>{
+    const userName=_.capitalize(req.body.userName);
+    try{
+        const foundList=await List.findOne({name:userName});
+        if(foundList){
+            res.redirect('/'+userName);
+        }else{
+            const newList= new List ({
+                name:userName,
+                items:defaultItems
+            });
+            console.log(newList);
+            await newList.save();
+            res.redirect('/'+userName);
         }
-       }
-       find();
+    }catch(err){
+        console.log(err);
+    }    
+});
+
+// app.get("/",(req,res)=>{ 
+//        const find= async()=>{
+//         try{
+//             const data = await Item.find({});
+//             const completedItems= await CompletedTask.find({});
+//             // console.log(data)
+//             if(data.length===0){
+//                 Item.insertMany(defaultItems).then(function(err){
+//                     if(err){
+//                         console.error(err);
+//                         res.status(500).send("Internal Server Error");
+//                     }else{
+//                         console.log("Success!!!");
+//                     }
+//                 })
+//                 res.redirect("/");
+//             }else{
+//                 res.render("list",{listTitle: "Today" , newListItems: data,completedItems:completedItems }); 
+//             } 
+//         }catch(err){
+//             console.error(err);
+//         }
+//        }
+//        find();
     
+// })
+
+app.get("/complete/:listTitle",async(req,res)=>{
+       const saveListName=_.capitalize(req.params.listTitle)
+       
+    try{
+        const completedTask= await CompletedTask.find({listName:saveListName});
+        res.render("completedtask",{completedTask:completedTask,previousURL:saveListName});
+    }catch(err){
+        console.log(err);
+    }
+})
+
+app.post('/complete/:listName',async(req,res)=>{
+    const completeTaskId=req.body.checkbox;
+    const listName=req.params.listName;
+
+    try{
+        await CompletedTask.findByIdAndRemove(completeTaskId);
+        res.redirect('/complete/'+listName);
+    }catch(err){
+        console.log(err);
+    }
 })
 
 
-app.get("/:customListName",(req,res)=>{
+app.get("/:customListName",async(req,res)=>{
     const customListName = _.capitalize(req.params.customListName);
+    
+    const completedItems= await CompletedTask.find({});
+    
     const findOne = async()=>{
         try{
             const data1=await List.findOne({name: customListName});
@@ -102,7 +165,7 @@ app.get("/:customListName",(req,res)=>{
                 list.save();
                 res.redirect("/"+ customListName);
             }else{
-                res.render("list",{listTitle: data1.name, newListItems: data1.items});
+                res.render("list",{listTitle: data1.name, newListItems: data1.items,completedItems:completedItems});
             }
         }catch(err){
             console.error(err);
@@ -162,50 +225,63 @@ app.post("/", (req,res)=>{
      
 });
 
-app.post("/delete",(req,res)=>{
+app.post("/complete",async(req,res)=>{
+    const completedTaskId=req.body.checkbox;
+    const listNames= await CompletedTask.findOne({_id:completedTaskId});
+    const storeNames=listNames.listName;
+    // console.log(storeNames);
+    const isPresent= await CompletedTask.find({listName:storeNames});
+    if(completedTaskId){
+        await CompletedTask.findByIdAndRemove(completedTaskId).then(function(err){
+            res.redirect('/complete');
+            if(!err){
+                console.log("Successfully deleted");
+            }else{
+                console.log(err);
+            }
+        })
+    }else{
+        console.log(err);
+    }
+})
+
+app.post("/delete",async(req,res)=>{
     const checkedItemId=(req.body.checkbox);
     const listName = req.body.listName;
-    if(listName==="Today"){
-        Item.findByIdAndRemove(checkedItemId).then(function(err){
-            res.redirect("/");
-            if(!err){
-                console.log("Successfully deleted item")
-            }else{
-                console.error(err);
-                res.status(500).send("Internal Server Error");
-            }
-        });
-    }else{
-        const findThree = async()=>{
+    const completedTaskId=(req.body.completedCheckbox);
+        if(checkedItemId){
+        
             try{
-               const data3 = await List.findOneAndUpdate({name:listName},{$pull:{items: {_id:checkedItemId}}});
-               res.redirect("/"+ listName);
+                    await List.findOneAndUpdate({name:listName},{$pull:{items: {_id:checkedItemId}}});
+                    res.redirect("/"+ listName); 
             }catch(err){
                 console.error(err);
-                res.status(500).send("Internal Server Error");
             }
-        }
-        findThree();
-    //     // List.findOneAndUpdate({name:listName},{$pull:{items: {_id:checkedItemId}}}).then(function(err,foundItems){
-    //     //     if(!err){
-    //     //         res.redirect("/"+ listName);
-    //     //     }
-    //     })
+        }else if(completedTaskId){
+            try {
+                const otherListTaskId=completedTaskId;
+                const findOtherListTaskName= await List.findOne(
+                {name:listName,"items._id":otherListTaskId},{ "items.$": 1 }
+            );            
+            
+            if(findOtherListTaskName){
+                const completedTask= new CompletedTask({
+                    listName:listName,
+                    name:findOtherListTaskName.items[0].name
+                });
+                await completedTask.save();
+                await List.findOneAndUpdate({name:listName},{$pull:{items:{_id:completedTaskId}}});
+                res.redirect("/"+listName);
+            }else{
+                console.log(error);
+            }                  
+    }catch(error){
+        console.log(error);
     }
-
-    
+}
 });
     
     
-// })
-
-// app.get("/Work",(req,res)=>{
-//      res.render("list",{listTitle: "Work List", newListItems: workItems});
-// })
-
-// app.post("/work",(req,res)=>{
-//     let item = req.body.newItem;
-// })
 
 
 app.listen(process.env.PORT||3000,()=>{

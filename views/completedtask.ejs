@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completed Tasks</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="box" id="heading">
+        <h1>Completed Tasks</h1>
+    </div>
+    <div class="box">
+        <%if(completedTask.length>0){%>
+        <% completedTask.forEach(function(item){%>
+        <form action="/complete/<%=item.listName%>" method="post">
+            <div class="item" >
+                <button class="delete-btn" type="submit" name="checkbox" value="<%=item._id%>" onChange="this.form.submit()">Delete</button>
+                <p><%=item.name%></p>
+            </div>
+        </form>
+        <%})%>
+        <a href="/<%=completedTask[0].listName%>">Back to ToDo List</a>
+        <%}else{%>
+            <p>No completed task to show</p>
+            <a href="/<%=previousURL%>" >Back to list</a>
+            <%}%>
+        <!-- <ul>
+            <% completedTask.forEach(task => { %>
+                <p class="completed-item"><%= task.name %><p/>
+            <% }) %>
+        </ul> -->
+        
+    </div>
+</body>
+</html>

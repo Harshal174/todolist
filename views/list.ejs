@@ -16,15 +16,24 @@
       <%  newListItems.forEach(function(item){ %>
         <form action="/delete" method="post">
             <div class="item">
-                <input type="checkbox" name="checkbox" value="<%=item._id%>" onChange="this.form.submit()">
-                 <p><%=item.name%></p>
+                <button class="delete-btn" type="submit" name="checkbox" value="<%=item._id%>" onChange="this.form.submit()">Delete</button>
+                <input type="checkbox" name="completedCheckbox" value="<%=item._id%>" onChange="this.form.submit()">
+                <p><%=item.name%></p>
             </div>
         <%})%>
-        <input type="hidden" name="listName" value="<%= listTitle %>"></input>
+        <input type="hidden" name="listName" value="<%= listTitle %>">
         </form>
         <!-- <%  for(var i=0;i<newListItems.length;i++){ %>
         
         <% } %> -->
+        
+        <a href="/complete/<%=listTitle%>">Completed Tasks</a>
+        <!-- <% completedItems.forEach(function(item){ %>
+            <div class="completed-item">
+                <p><%=item.name%></p>
+            </div>
+        <% }) %> -->
+        <a href="/" class="homepage-tag" >HomePage</a>
     
         <form class="" action="/" method="post">
             <input type="text" name="newItem" placeholder="New Item" autocomplete="off">

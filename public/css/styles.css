@@ -23,6 +23,25 @@ h1 {
   text-align: center;
 }
 
+.homepage-tag {
+  display: block; /* Make it a block element */
+  background-color: #A683E3; /* Background color */
+  color: white; /* Text color */
+  padding: 10px; /* Padding around the text */
+  margin: 20px auto; /* Center it with auto margins */
+  width: 130px; /* Fixed width */
+  height: 50px; /* Fixed height */
+  text-align: center; /* Center the text inside */
+  line-height: 50px; /* Vertically center the text */
+  text-decoration: none; /* Removed underline */
+  border-radius: 25px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.homepage-tag:hover {
+  background-color: #6824dd; /* Darker background on hover */
+}
+
 .item {
   min-height: 70px;
   display: flex;
@@ -68,6 +87,15 @@ button {
   border-width: 0;
 }
 
+.delete-btn{
+  border-radius: 50%;
+  background-color: #6824dd;
+  font-size: 15px;
+  padding-left: 5px;
+  padding-top: 5px;
+  margin-left: 10px;
+}
+
 input[type="text"] {
   text-align: center;
   height: 60px;
@@ -78,6 +106,8 @@ input[type="text"] {
   font-weight: 200;
   width: 313px;
 }
+
+
 
 input[type="text"]:focus {
   outline: none;
