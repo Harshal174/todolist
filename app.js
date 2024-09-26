@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+require("dotenv").config();
 
 const app = express();
 
@@ -16,10 +17,10 @@ app.use(express.static("public"));
 main().catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb+srv://admin-harshal:qJZARUUqvSKbdoKJ@cluster0.mx6bkrb.mongodb.net/todolistDB", {useNewUrlParser: true},{useUnifiedTopology:true});
-
+  await mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true},{useUnifiedTopology:true});
 }
-// mongoose.connect("mongodb+srv://admin-harshal:qJZARUUqvSKbdoKJ@cluster0.mx6bkrb.mongodb.net/todolistDB", {useNewUrlParser: true});
+
+// mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true});
 
 const itemsSchema = {
     name:String
@@ -67,7 +68,8 @@ app.get("/",(req,res)=>{
             if(data.length===0){
                 Item.insertMany(defaultItems).then(function(err){
                     if(err){
-                        console.log(err);
+                        console.error(err);
+                        res.status(500).send("Internal Server Error");
                     }else{
                         console.log("Success!!!");
                     }
@@ -77,7 +79,8 @@ app.get("/",(req,res)=>{
                 res.render("list",{listTitle: "Today" , newListItems: data}); 
             } 
         }catch(err){
-            console.log(err);
+            console.error(err);
+            res.status(500).send("Internal Server Error");
         }
        }
        find();
@@ -102,7 +105,8 @@ app.get("/:customListName",(req,res)=>{
                 res.render("list",{listTitle: data1.name, newListItems: data1.items});
             }
         }catch(err){
-            console.log(err);
+            console.error(err);
+            res.status(500).send("Internal Server Error");
         }
     }
 
@@ -128,28 +132,33 @@ app.post("/", (req,res)=>{
      const itemName = req.body.newItem;
      const listName = req.body.list;
 
-     const item = new Item({
-        name:itemName
-     });
-     if(listName==="Today"){
-        item.save();
-        res.redirect("/");
-     }else{
-        const findTwo = async ()=>{
-            try{
-                const data2 = await List.findOne({name:listName});
-                data2.items.push(item);
-                data2.save();
-                res.redirect("/"+ listName);
-            }catch(err){
-                console.log(err);
+     const cleanedItemName = itemName.replace(/\s+/g, ' ').trim();
+     
+
+     if (!cleanedItemName) {
+        return res.redirect("/" + (listName === "Today" ? "" : listName));  // Redirect to the correct list
+    }else{
+        const item = new Item({
+            name:cleanedItemName
+         });
+         if(listName==="Today"){
+            item.save();
+            res.redirect("/");
+         }else{
+            const findTwo = async ()=>{
+                try{
+                    const data2 = await List.findOne({name:listName});
+                        data2.items.push(item);
+                        data2.save();
+                        res.redirect("/"+ listName);   
+                }catch(err){
+                    console.error(err);
+                    res.status(500).send("Internal Server Error");
+                }
             }
-        }
-        findTwo();
+            findTwo();
+         }     
      }
-
-
-
      
 });
 
@@ -162,7 +171,8 @@ app.post("/delete",(req,res)=>{
             if(!err){
                 console.log("Successfully deleted item")
             }else{
-                console.log(err);
+                console.error(err);
+                res.status(500).send("Internal Server Error");
             }
         });
     }else{
@@ -171,7 +181,8 @@ app.post("/delete",(req,res)=>{
                const data3 = await List.findOneAndUpdate({name:listName},{$pull:{items: {_id:checkedItemId}}});
                res.redirect("/"+ listName);
             }catch(err){
-                console.log(err);
+                console.error(err);
+                res.status(500).send("Internal Server Error");
             }
         }
         findThree();
