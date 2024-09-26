@@ -135,7 +135,7 @@ app.post("/", (req,res)=>{
      const cleanedItemName = itemName.replace(/\s+/g, ' ').trim();
      
 
-     if (!cleanedItemName) {
+     if (!cleanedItemName||!cleanedItemName.trim()) {
         return res.redirect("/" + (listName === "Today" ? "" : listName));  // Redirect to the correct list
     }else{
         const item = new Item({
