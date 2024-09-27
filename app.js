@@ -147,6 +147,19 @@ app.post('/complete/:listName',async(req,res)=>{
     }
 })
 
+app.post('/delete-list',async(req,res)=>{
+    const getListName=req.body.deleteList;
+    try{
+        const dataList=await List.find({name:getListName});
+        const listId=dataList[0]._id;
+        await List.findByIdAndDelete({_id:listId});
+        res.redirect('/');
+    }catch(err){
+        console.log(err);
+    }
+})
+
+
 
 app.get("/:customListName",async(req,res)=>{
     const customListName = _.capitalize(req.params.customListName);

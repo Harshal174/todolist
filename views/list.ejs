@@ -34,6 +34,9 @@
             </div>
         <% }) %> -->
         <a href="/" class="homepage-tag" >HomePage</a>
+        <form action="/delete-list" method="post">
+            <button type="submit" name="deleteList" value="<%=listTitle%>" onChange="this.form.submit()">Delete List</button>
+        </form>
     
         <form class="" action="/" method="post">
             <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
