@@ -160,7 +160,6 @@ app.post('/delete-list',async(req,res)=>{
 })
 
 
-
 app.get("/:customListName",async(req,res)=>{
     const customListName = _.capitalize(req.params.customListName);
     
@@ -293,7 +292,8 @@ app.post("/delete",async(req,res)=>{
     }
 }
 });
-    
+
+
     
 
 

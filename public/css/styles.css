@@ -1,9 +1,87 @@
+
 html {
   background-color: #E4E9FD;
   background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
+/* Navbar styling */
+.navbar {
+  background-color: #333;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.hamburger {
+  font-size: 30px;
+  color: white;
+  padding-left: 15px;
+  cursor: pointer;
+}
+
+/* Sidebar styling */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #333;
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .close-btn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidebar-btn {
+  display: block;
+  padding: 15px;
+  background-color: #A683E3;
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 200px;
+  margin: 10px auto;
+  border-radius: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar-btn:hover {
+  background-color: #6824dd;
+}
+
+.create-btn {
+  font-size: 30px;
+  background-color: #6824dd;
+}
+
+.create-btn:hover {
+  background-color: #4f1ca9;
+}
+
 
 h1 {
   color: #fff;
@@ -14,7 +92,7 @@ h1 {
   max-width: 400px;
   margin: 50px auto;
   background: white;
-  border-radius: 5px;
+  border-radius: 50px;
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
 }
 
@@ -24,6 +102,9 @@ h1 {
 }
 
 .homepage-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   display: block; /* Make it a block element */
   background-color: #A683E3; /* Background color */
   color: white; /* Text color */
@@ -43,6 +124,7 @@ h1 {
 }
 
 .item {
+ 
   min-height: 70px;
   display: flex;
   align-items: center;
@@ -95,6 +177,13 @@ button {
   padding-top: 5px;
   margin-left: 10px;
 }
+.delete-list-btn{
+  position:absolute;
+  margin: 10px;
+  font-size: 15px;
+  padding: 5px;
+}
+
 
 input[type="text"] {
   text-align: center;
@@ -106,7 +195,21 @@ input[type="text"] {
   font-weight: 200;
   width: 313px;
 }
+.completed-tag{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: static;
+  width: fit-content;
+  margin-left: 150px;
+  top: 10px;
+  right: 10px;
+  background-color: #6824dd;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
 
+}
 
 
 input[type="text"]:focus {
@@ -124,3 +227,5 @@ footer {
   color: rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+
+/******  4541e106-b9b9-4933-857b-e0d524ce3f90  *******/

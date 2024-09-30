@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Completed Tasks</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div class="box" id="heading">
@@ -21,10 +21,11 @@
             
         </form>
         <%})%>
-        <a href="/<%=completedTask[0].listName%>">Back to ToDo List</a>
+        
+        <a class="" href="/<%=completedTask[0].listName%>">Back to ToDo List</a>
         <%}else{%>
             <p>No completed task to show</p>
-            <a href="/<%=previousURL%>" >Back to list</a>
+            <a class="completed-tag" href="/<%=previousURL%>" >Back to do list</a>
             <%}%>
         <!-- <ul>
             <% completedTask.forEach(task => { %>

@@ -10,7 +10,7 @@
     <div class="box" id="heading">
         <h1><%=listTitle%></h1>
     </div>
-    <div class="box">
+    <div class="box" style="border-radius: 5px;">
 
 
       <%  newListItems.forEach(function(item){ %>
@@ -27,15 +27,16 @@
         
         <% } %> -->
         
-        <a href="/complete/<%=listTitle%>">Completed Tasks</a>
+        <a class="completed-tag" href="/complete/<%=listTitle%>">Completed Tasks</a>
         <!-- <% completedItems.forEach(function(item){ %>
             <div class="completed-item">
                 <p><%=item.name%></p>
             </div>
         <% }) %> -->
+        
         <a href="/" class="homepage-tag" >HomePage</a>
         <form action="/delete-list" method="post">
-            <button type="submit" name="deleteList" value="<%=listTitle%>" onChange="this.form.submit()">Delete List</button>
+            <button class="delete-list-btn"  type="submit" name="deleteList" value="<%=listTitle%>" onChange="this.form.submit()">Delete List</button>
         </form>
     
         <form class="" action="/" method="post">

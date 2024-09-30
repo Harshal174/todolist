@@ -7,14 +7,38 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="box" id="heading">
-        <h1>Welcome to Your To-Do List</h1>
+    <!-- Navbar with hamburger button -->
+    <div class="navbar">
+        <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
+        <center><h1>Welcome to Your To-Do List</h1></center>
     </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
+        <button class="sidebar-btn create-btn">
+            &#43; Create Task
+        </button>
+        <button class="sidebar-btn">All Tasks</button>
+        <button class="sidebar-btn">Starred</button>
+        <button class="sidebar-btn">Today's Tasks</button>
+    </div>
+
     <div class="box">
         <form action="/search" method="post">
             <input type="text" name="userName" placeholder="Enter your name" required>
             <button type="submit">Go</button>
         </form>
     </div>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+            } else {
+                sidebar.style.width = "250px";
+            }
+        }
+    </script>
 </body>
 </html>
