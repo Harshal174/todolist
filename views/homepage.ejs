@@ -10,19 +10,41 @@
     <!-- Navbar with hamburger button -->
     <div class="navbar">
         <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
-        <center><h1>Welcome to Your To-Do List</h1></center>
+        <h1>Welcome to Your To-Do List</h1>
     </div>
 
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
-        <button class="sidebar-btn create-btn">
+        <button class="sidebar-btn create-btn" onclick="openModal()">
             &#43; Create</button>
         <button class="sidebar-btn">All Tasks</button>
         <button class="sidebar-btn">Starred</button>
         <button class="sidebar-btn">Today's Tasks</button>
     </div>
+    <!-- Modal for Creating Task -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Add New Task</h2>
+            <form action="/addTask" method="post">
+                <label for="taskTitle">Add Title</label>
+                <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Title" required>
+                
+                <label for="taskDate">Choose Date</label>
+                <input type="date" id="taskDate" name="taskDate" required>
 
+                <label for="taskPriority">Priority</label>
+                <select id="taskPriority" name="taskPriority" required>
+                    <option value="high">High</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="low">Low</option>
+                </select>
+
+                <button type="submit">Done</button>
+            </form>
+        </div>
+        </div>
     <div class="box">
         <form action="/search" method="post">
             <input type="text" name="userName" placeholder="Enter your name" required>
@@ -44,6 +66,23 @@
                 sidebar.style.width = "0";
             } else {
                 sidebar.style.width = "250px";
+            }
+        }
+        // Open Modal to Add Task
+        function openModal() {
+            document.getElementById("taskModal").style.display = "block";
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById("taskModal").style.display = "none";
+        }
+
+        // Close the modal when clicking outside the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById("taskModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
         }
     </script>
