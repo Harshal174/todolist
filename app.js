@@ -3,6 +3,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
 require("dotenv").config();
 
 const app = express();
@@ -13,6 +18,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 //  mongodb://localhost:27017
+app.use(session({secret:"secret",resave:false,saveUninitialized:false}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 main().catch(err => console.log(err));
 
@@ -86,39 +94,62 @@ const List = mongoose.model("List",listSchema);
 app.get('/',(req,res)=>{
     res.render('homepage');
 });
-
-app.post('/login',async(req,res)=>{
-    const data=req.body.username    
-    const data1=req.body.password    
-    console.log(data,data1);
-    try {
-        const verifyUsername=await Register.findOne({username:data});
-        if(!verifyUsername) {
-            res.redirect('/register');
-        }else{
-            const verifyPassword=await Register.findOne({password:data1});
-            if(!verifyPassword) {
-                res.redirect("Wrong password");
-            }else{
-                res.redirect('/'+verifyUsername.username);
-            }
+passport.use(new LocalStrategy(
+    async(username,password,done)=>{
+        const foundUser=await Register.findOne({username:username});
+        if(!foundUser) {
+            return done(null,false,{message:"Incorrect username"});
         }
-    } catch (error) {
-        console.log(error);
+
+        const isFound=await bcrypt.compare(password,foundUser.password);
+        if(!isFound) {
+            return done(null,false,{message:"Incorrect password"});
+        }
+        return done(null,foundUser);
     }
+))
+passport.serializeUser((user,done)=>{
+    done(null,user.id);
 })
+passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await Register.findById(id);
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
+  });
+  app.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) { 
+        return next(err); 
+      }
+      if (!user) {
+        return res.redirect('/'); // Redirect if login fails
+      }
+  
+      req.logIn(user, (err) => {
+        if (err) { 
+          return next(err); 
+        }
+        // Redirect the user to their custom route after login
+        return res.redirect('/' + user.username);
+      });
+    })(req, res, next);
+  });
 
 app.post('/register',async(req,res)=>{
     const data=(req.body.username)+Math.floor(Math.random()*1000);    
-    const data1=req.body.password    
+    const data1=req.body.password;
+    const hashedPassword=await bcrypt.hash(data1,10);
     console.log(data,data1);
     try {
-        const user = await Register.create({
+        const user = new Register({
             username:data,
-            password:data1,
+            password:hashedPassword,
         })
         res.redirect('/'+data);
-        user.save();
+        await user.save();
     } catch (error) {
         console.log(error);
     }

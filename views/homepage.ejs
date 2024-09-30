@@ -83,7 +83,15 @@
                 sidebar.style.width = "250px";
             }
         }
-        
+        function showRegisterForm() {
+            document.querySelector('.login-form').style.display = 'none'; // Hide login form
+            document.getElementById('register-form').style.display = 'block'; // Show registration form
+        }
+
+        function showLoginForm() {
+            document.getElementById('register-form').style.display = 'none'; // Hide registration form
+            document.querySelector('.login-form').style.display = 'block'; // Show login form
+        }
         // Open Modal to Add Task
         function openModal() {
             document.getElementById("taskModal").style.display = "block";
