@@ -1,7 +1,7 @@
 
 html {
   background-color: #E4E9FD;
-  background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+  background-image: -webkit-linear-gradient(65deg, #333 50%, #E4E9FD 50%);
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
@@ -75,14 +75,44 @@ html {
 
 .create-btn {
   font-size: 30px;
-  background-color: #6824dd;
+  background-color: #A683E3;
 }
 
 .create-btn:hover {
-  background-color: #4f1ca9;
+  background-color: #6824dd;
 }
 
-
+/* Additional CSS for form styling */
+.login-form {
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+.login-form button {
+  background-color: #A683E3;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+}
+.login-form button:hover {
+  background-color: #6824dd;
+}
 h1 {
   color: #fff;
   padding: 10px;

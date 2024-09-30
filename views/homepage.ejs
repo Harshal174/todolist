@@ -17,8 +17,7 @@
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
         <button class="sidebar-btn create-btn">
-            &#43; Create Task
-        </button>
+            &#43; Create</button>
         <button class="sidebar-btn">All Tasks</button>
         <button class="sidebar-btn">Starred</button>
         <button class="sidebar-btn">Today's Tasks</button>
@@ -28,6 +27,14 @@
         <form action="/search" method="post">
             <input type="text" name="userName" placeholder="Enter your name" required>
             <button type="submit">Go</button>
+        </form>
+    </div>
+    <!-- Login Form -->
+    <div class="login-form box">
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
         </form>
     </div>
     <script>
