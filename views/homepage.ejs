@@ -16,11 +16,11 @@
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
-        <button class="sidebar-btn create-btn">
-            &#43; Create</button>
+        <button class="sidebar-btn create-btn">&#43; Create</button>
         <button class="sidebar-btn">All Tasks</button>
         <button class="sidebar-btn">Starred</button>
         <button class="sidebar-btn">Today's Tasks</button>
+        <button class="sidebar-btn" onclick="showRegisterForm()">Register</button> <!-- Button to show registration form -->
     </div>
 
     <div class="box">
@@ -29,6 +29,7 @@
             <button type="submit">Go</button>
         </form>
     </div>
+
     <!-- Login Form -->
     <div class="login-form box">
         <form action="/login" method="post">
@@ -36,7 +37,20 @@
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
+        <!-- Message for new users -->
+        <p>If new user, <a href="#" onclick="showRegisterForm()">click here to register</a>.</p> 
     </div>
+
+    <!-- Registration Form -->
+    <div id="register-form" class="login-form box" style="display:none;">
+        <form action="/register" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="#" onclick="showLoginForm()">Login here</a>.</p> <!-- Link to switch back to login -->
+    </div>
+
     <script>
         function toggleSidebar() {
             var sidebar = document.getElementById("sidebar");
@@ -46,6 +60,17 @@
                 sidebar.style.width = "250px";
             }
         }
+
+        function showRegisterForm() {
+            document.querySelector('.login-form').style.display = 'none'; // Hide login form
+            document.getElementById('register-form').style.display = 'block'; // Show registration form
+        }
+
+        function showLoginForm() {
+            document.getElementById('register-form').style.display = 'none'; // Hide registration form
+            document.querySelector('.login-form').style.display = 'block'; // Show login form
+        }
     </script>
+
 </body>
 </html>

@@ -38,6 +38,7 @@ const Item3= new Item({
     name:"<-- Hit this to delete an item."
 });
 
+
 const defaultItems=[Item1,Item2,Item3];
 
 const completedTaskSchema={
@@ -51,6 +52,12 @@ const completedTaskSchema={
 
 const CompletedTask=mongoose.model("CompletedTask",completedTaskSchema);
 
+const registerSchema=new mongoose.Schema({
+    username:{type:String,required:true,unique:true},
+    password:{type:String,required:true},
+})
+
+const Register=mongoose.model("Register",registerSchema);
 
 const listSchema = {
     name: String,
@@ -58,6 +65,8 @@ const listSchema = {
 };
 
 const List = mongoose.model("List",listSchema);
+
+
 
 
 //Date module not working that's why using today instead of current day and date...
@@ -77,6 +86,45 @@ const List = mongoose.model("List",listSchema);
 app.get('/',(req,res)=>{
     res.render('homepage');
 });
+
+app.post('/login',async(req,res)=>{
+    const data=req.body.username    
+    const data1=req.body.password    
+    console.log(data,data1);
+    try {
+        const verifyUsername=await Register.findOne({username:data});
+        if(!verifyUsername) {
+            res.redirect('/register');
+        }else{
+            const verifyPassword=await Register.findOne({password:data1});
+            if(!verifyPassword) {
+                res.redirect("Wrong password");
+            }else{
+                res.redirect('/'+verifyUsername.username);
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/register',async(req,res)=>{
+    const data=(req.body.username)+Math.floor(Math.random()*1000);    
+    const data1=req.body.password    
+    console.log(data,data1);
+    try {
+        const user = await Register.create({
+            username:data,
+            password:data1,
+        })
+        res.redirect('/'+data);
+        user.save();
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 app.post('/search',async(req,res)=>{
     const userName=_.capitalize(req.body.userName);
     try{
@@ -236,6 +284,8 @@ app.post("/", (req,res)=>{
      }
      
 });
+
+
 
 app.post("/complete",async(req,res)=>{
     const completedTaskId=req.body.checkbox;
