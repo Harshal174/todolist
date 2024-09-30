@@ -16,12 +16,8 @@
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
-<<<<<<< HEAD
-        <button class="sidebar-btn create-btn">&#43; Create</button>
-=======
         <button class="sidebar-btn create-btn" onclick="openModal()">
             &#43; Create</button>
->>>>>>> a455bd3ba3467abcff509d80df4dafcbc135092a
         <button class="sidebar-btn">All Tasks</button>
         <button class="sidebar-btn">Starred</button>
         <button class="sidebar-btn">Today's Tasks</button>
@@ -87,17 +83,7 @@
                 sidebar.style.width = "250px";
             }
         }
-<<<<<<< HEAD
-
-        function showRegisterForm() {
-            document.querySelector('.login-form').style.display = 'none'; // Hide login form
-            document.getElementById('register-form').style.display = 'block'; // Show registration form
-        }
-
-        function showLoginForm() {
-            document.getElementById('register-form').style.display = 'none'; // Hide registration form
-            document.querySelector('.login-form').style.display = 'block'; // Show login form
-=======
+        
         // Open Modal to Add Task
         function openModal() {
             document.getElementById("taskModal").style.display = "block";
@@ -114,7 +100,6 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
->>>>>>> a455bd3ba3467abcff509d80df4dafcbc135092a
         }
     </script>
 
