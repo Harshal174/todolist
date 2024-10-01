@@ -1,7 +1,7 @@
 
 html {
   background-color: #E4E9FD;
-  background-image: -webkit-linear-gradient(65deg, #333 50%, #E4E9FD 50%);
+  background-image: -webkit-linear-gradient(90deg, #333 30%, #E4E9FD 70%);
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
@@ -177,10 +177,25 @@ h1 {
 
 .box {
   max-width: 400px;
-  margin: 50px auto;
+  margin: 200px auto;
   background: white;
   border-radius: 50px;
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+}
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.box p a{
+  text-decoration: none;
+  color: #333;
 }
 
 #heading {

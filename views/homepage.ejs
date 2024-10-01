@@ -48,19 +48,19 @@
         </div>
     <!-- Login Form -->
     <div class="login-form box">
-        <form action="/login" method="post">
+        <form action="/login" method="post" autocomplete="off">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
         <!-- Message for new users -->
-        <p>If new user, <a href="#" onclick="showRegisterForm()">click here to register</a>.</p> 
+        <p><a href="#" onclick="showRegisterForm()">If new user, click here to register</a>.</p> 
     </div>
 
     <!-- Registration Form -->
     <div id="register-form" class="login-form box" style="display:none;">
         <form action="/register" method="post">
-            <input type="text" name="username" placeholder="Username" required>
+            <input type="text" name="email" placeholder="abc@mail.com" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Register</button>
         </form>
