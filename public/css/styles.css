@@ -8,9 +8,9 @@ html {
 }
 /* Navbar styling */
 .navbar {
-  background-color: #333; /* Semi-transparent background to see the blur effect */
+  background-color: #000; /* Semi-transparent background to see the blur effect */
   backdrop-filter: blur(10px);
-  height: 50px;
+  margin: 0;
   display: flex;
   align-items: center;
 }
@@ -72,7 +72,7 @@ html {
 }
 
 .sidebar-btn:hover {
-  background-color: #6824dd;
+  background-color: #38b2acb0;
 }
 
 .create-btn {
@@ -81,7 +81,7 @@ html {
 }
 
 .create-btn:hover {
-  background-color: #6824dd;
+  background-color: #38b2acb0;
 }
 /* Modal (pop-up) styles */
 .modal {
@@ -124,7 +124,7 @@ html {
 }
 
 .modal-content button:hover {
-  background-color: #6824dd;
+  background-color: #38b2acb0;
 }
 
 .close-btn {
@@ -170,7 +170,7 @@ html {
   border-radius: 4px;
 }
 .login-form button:hover {
-  background-color: #6824dd;
+  background-color: #38b2acb0;
 }
 h1 {
   color: #fff;
@@ -181,8 +181,12 @@ h1 {
   max-width: 400px;
   margin: 200px auto;
   background: #000;
-  border-radius: 50px;
-  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  border-radius: 10%;
+  border: #000;
+  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.6);
+}
+.box h1{
+  background-color: #38b2ac;
 }
 .login-form input[type="text"],
 .login-form input[type="email"],
@@ -230,7 +234,7 @@ h1 {
 }
 
 .homepage-tag:hover {
-  background-color: #6824dd; /* Darker background on hover */
+  background-color: #38b2acb0; /* Darker background on hover */
 }
 
 .item {
@@ -281,7 +285,7 @@ button {
 
 .delete-btn{
   border-radius: 50%;
-  background-color: #6824dd;
+  background-color: #38b2acb0;
   font-size: 15px;
   padding-left: 5px;
   padding-top: 5px;
@@ -314,7 +318,7 @@ input[type="text"] {
   margin-left: 150px;
   top: 10px;
   right: 10px;
-  background-color: #6824dd;
+  background-color: #38b2acb0;
   color: white;
   padding: 5px;
   border-radius: 5px;
@@ -351,9 +355,9 @@ footer {
 }
 
 .dropdown-btn {
-  background-color: #fff;
+  background-color: #000;
   border: none;
-  color: #333;
+  color: #fff;
   cursor: pointer;
   font-size: 20px;
 }
@@ -394,7 +398,6 @@ footer {
   padding: 8px;
   margin-right: 10px;
   color: #fff;
-  border: 1px solid #ccc;
   border-radius: 4px;
 }
 /******  4541e106-b9b9-4933-857b-e0d524ce3f90  *******/
