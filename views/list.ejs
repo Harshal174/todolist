@@ -47,9 +47,7 @@
         </div>
         </div>
     <div class="box">
-        <div>
-            <h1><%=listTitle%></h1>
-            </div>
+            <!-- <h1><%=listTitle%></h1> -->
         <% newListItems.forEach(function(item){ %>
             <div class="item">
               <!-- Task name -->
@@ -71,7 +69,7 @@
           <% }) %>
         
           <!-- Completed tasks link -->
-          <a class="completed-tag" href="/complete/<%= listTitle %>">Completed Tasks</a>
+          <a class="completed-tag" style="text-decoration: none;" href="/complete/<%= listTitle %>">Completed Tasks</a>
         
           <!-- Add a new task field with a three-dotted option on the right -->
           <div class="add-task">

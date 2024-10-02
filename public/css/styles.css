@@ -123,10 +123,6 @@ html {
   border-radius: 4px;
 }
 
-.modal-content button:hover {
-  background-color: #38b2acb0;
-}
-
 .close-btn {
   color: #aaa;
   float: right;
@@ -183,10 +179,10 @@ h1 {
   background: #000;
   border-radius: 10%;
   border: #000;
-  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.6);
+  box-shadow: 15px 15px 15px 15px rgba(0, 0, 0, 0.6);
 }
 .box h1{
-  background-color: #38b2ac;
+  background-color: #333;
 }
 .login-form input[type="text"],
 .login-form input[type="email"],
@@ -348,7 +344,6 @@ footer {
   align-items: center;
   margin-bottom: 10px;
 }
-
 .dropdown {
   position: relative;
   display: inline-block;
