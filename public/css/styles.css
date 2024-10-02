@@ -1,11 +1,15 @@
 
-html {
-  background-color: #E4E9FD;
+body {
+  background-image: url('background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   font-family: 'helvetica neue';
 }
 /* Navbar styling */
 .navbar {
-  background-color: #333;
+  background-color: rgba(51, 51, 51, 0.6); /* Semi-transparent background to see the blur effect */
+  backdrop-filter: blur(10px);
   height: 50px;
   display: flex;
   align-items: center;
@@ -25,7 +29,7 @@ html {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #333;
+  background-color: #000;
   overflow-x: hidden;
   transition: 0.3s;
   padding-top: 60px;
@@ -176,7 +180,7 @@ h1 {
 .box {
   max-width: 400px;
   margin: 200px auto;
-  background: white;
+  background: #000;
   border-radius: 50px;
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
 }
@@ -185,6 +189,7 @@ h1 {
   width: 100%;
   text-align: left;
   padding: 10px;
+  background-color: #38b2ac;
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
