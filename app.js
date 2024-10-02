@@ -34,20 +34,20 @@ const itemsSchema = {
     name:String
 };
 const Item = mongoose.model("item",itemsSchema);
-const Item1= new Item({
-    name:"Welcome to your to do list"
-});
+// const Item1= new Item({
+//     name:"Welcome to your to do list"
+// });
 
-const Item2= new Item({
-    name:"Hit the + button to add a new item"
-});
+// const Item2= new Item({
+//     name:"Hit the + button to add a new item"
+// });
 
-const Item3= new Item({
-    name:"<-- Hit this to delete an item."
-});
+// const Item3= new Item({
+//     name:"<-- Hit this to delete an item."
+// });
 
 
-const defaultItems=[Item1,Item2,Item3];
+const defaultItems=[];
 
 const completedTaskSchema={
     listName:String,

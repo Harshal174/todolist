@@ -11,6 +11,7 @@
      <div class="navbar">
         <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
         <h1><%=listTitle%></h1>
+        
     </div>
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
@@ -20,7 +21,7 @@
         <button class="sidebar-btn">All Tasks</button>
         <button class="sidebar-btn">Starred</button>
         <button class="sidebar-btn">Today's Tasks</button>
-        <button class="sidebar-btn" onclick="showRegisterForm()">Register</button> <!-- Button to show registration form -->
+        <button class="sidebar-btn">Logout</button>
     </div>
     <!-- Modal for Creating Task -->
     <div id="taskModal" class="modal">
@@ -46,39 +47,46 @@
         </div>
         </div>
     <div class="box" style="border-radius: 5px;">
-
-
-      <%  newListItems.forEach(function(item){ %>
-        <form action="/delete" method="post">
+        <% newListItems.forEach(function(item){ %>
             <div class="item">
-                <button class="delete-btn" type="submit" name="checkbox" value="<%=item._id%>" onChange="this.form.submit()">Delete</button>
-                <input type="checkbox" name="completedCheckbox" value="<%=item._id%>" onChange="this.form.submit()">
-                <p><%=item.name%></p>
+              <!-- Task name -->
+              <p><%= item.name %></p>
+              
+              <!-- Three-dotted button for dropdown options (Edit, Complete, Delete) -->
+              <div class="dropdown">
+                <button class="dropdown-btn">⋮</button> <!-- Three dots button -->
+                <div class="dropdown-content">
+                  <!-- Edit option (Implement link/action for editing here) -->
+                  <a href="#">Edit</a>
+                  <!-- Completed option -->
+                  <a href="#" onclick="markCompleted('<%= item._id %>')">Completed</a>
+                  <!-- Delete option -->
+                  <a href="#" onclick="deleteItem('<%= item._id %>')">Delete</a>
+                </div>
+              </div>
             </div>
-        <%})%>
-        <input type="hidden" name="listName" value="<%= listTitle %>">
-        </form>
-        <!-- <%  for(var i=0;i<newListItems.length;i++){ %>
+          <% }) %>
         
-        <% } %> -->
+          <!-- Completed tasks link -->
+          <a class="completed-tag" href="/complete/<%= listTitle %>">Completed Tasks</a>
         
-        <a class="completed-tag" href="/complete/<%=listTitle%>">Completed Tasks</a>
-        <!-- <% completedItems.forEach(function(item){ %>
-            <div class="completed-item">
-                <p><%=item.name%></p>
+          <!-- Add a new task field with a three-dotted option on the right -->
+          <div class="add-task">
+            <form class="" action="/" method="post" style="display: inline-block;">
+              <input type="text" name="newItem" placeholder="Add a new task" autocomplete="off">
+              <button type="submit" name="list" value="<%= listTitle %>">+</button>
+            </form>
+        
+            <!-- Three-dotted button for dropdown (New task options, could be extra features like priorities, tags, etc.) -->
+            <div class="dropdown" style="display: inline-block;">
+              <button class="dropdown-btn">⋮</button>
+              <div class="dropdown-content">
+                <!-- Options for new task (These could be extended to handle priorities, etc.) -->
+                <a href="#">Set Priority</a>
+                <a href="#">Add Tag</a>
+              </div>
             </div>
-        <% }) %> -->
-        
-        <a href="/" class="homepage-tag" >HomePage</a>
-        <form action="/delete-list" method="post">
-            <button class="delete-list-btn"  type="submit" name="deleteList" value="<%=listTitle%>" onChange="this.form.submit()">Delete List</button>
-        </form>
-    
-        <form class="" action="/" method="post">
-            <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-            <button type="submit" name="list" value=<%=listTitle%>>+</button>
-        </form>
-        
+          </div>
     </div>
     <script>
         function toggleSidebar() {
@@ -106,6 +114,37 @@
                 modal.style.display = "none";
             }
         }
+        // Function to mark an item as completed
+  function markCompleted(itemId) {
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = '/completed'; // Route to mark as completed
+
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'completedCheckbox';
+    input.value = itemId;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit(); // Submit form to complete task
+  }
+
+  // Function to delete a task
+  function deleteItem(itemId) {
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = '/delete'; // Route to delete task
+
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'checkbox';
+    input.value = itemId;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit(); // Submit form to delete task
+  }
     </script>
 </body>
 </html>

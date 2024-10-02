@@ -9,43 +9,9 @@
 <body>
     <!-- Navbar with hamburger button -->
     <div class="navbar">
-        <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
+        <!-- <span class="hamburger" onclick="toggleSidebar()">&#9776;</span> -->
         <h1>Welcome to Your To-Do List</h1>
     </div>
-
-    <!-- Sidebar -->
-    <div id="sidebar" class="sidebar">
-        <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
-        <button class="sidebar-btn create-btn" onclick="openModal()">
-            &#43; Create</button>
-        <button class="sidebar-btn">All Tasks</button>
-        <button class="sidebar-btn">Starred</button>
-        <button class="sidebar-btn">Today's Tasks</button>
-        <button class="sidebar-btn" onclick="showRegisterForm()">Register</button> <!-- Button to show registration form -->
-    </div>
-    <!-- Modal for Creating Task -->
-    <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>Add New Task</h2>
-            <form action="/addTask" method="post">
-                <label for="taskTitle">Add Title</label>
-                <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Title" required>
-                
-                <label for="taskDate">Choose Date</label>
-                <input type="date" id="taskDate" name="taskDate" required>
-
-                <label for="taskPriority">Priority</label>
-                <select id="taskPriority" name="taskPriority" required>
-                    <option value="high">High</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="low">Low</option>
-                </select>
-
-                <button type="submit">Done</button>
-            </form>
-        </div>
-        </div>
     <!-- Login Form -->
     <div class="login-form box">
         <form action="/login" method="post" autocomplete="off">
@@ -59,10 +25,10 @@
 
     <!-- Registration Form -->
     <div id="register-form" class="login-form box" style="display:none;">
-        <form action="/register" method="post">
-            <input type="text" name="username" placeholder="abc@mail.com" required>
-            <input type="password" placeholder="Password" required>
-            <input type="password" name="password" placeholder="Confirm Password" required>
+        <form action="/register" method="post" onsubmit="return validatePasswords()">
+            <input type="email" name="username" placeholder="abc@mail.com" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" name="password" placeholder="Confirm Password" required>
             <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="#" onclick="showLoginForm()">Login here</a>.</p> <!-- Link to switch back to login -->
@@ -102,6 +68,16 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+        function validatePasswords() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+    
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
         }
     </script>
 
