@@ -64,7 +64,7 @@
         <button class="sidebar-btn"><i class="fas fa-star"></i>
           Starred</button>
         <button class="sidebar-btn"><i class="fas fa-calendar"></i> Today's Tasks</button>
-        <button class="sidebar-btn"><span class="material-icons">exit_to_app</span> Logout</button>
+        <button id="logout-btn" class="sidebar-btn" onclick="logOut()" ><span class="material-icons" >exit_to_app</span> Logout</button>
     </div>
     <!-- Modal for Creating Task -->
     <div id="taskModal" class="modal">
@@ -104,9 +104,9 @@
                   <!-- Edit option (Implement link/action for editing here) -->
                   <a href="#">Edit</a>
                   <!-- Completed option -->
-                  <a href="#" onclick="markCompleted('<%= item._id %>')">Completed</a>
+                  <a href="#" onclick="markCompleted('<%= item._id %>','<%= listTitle %>')">Completed</a>
                   <!-- Delete option -->
-                  <a href="#" onclick="deleteItem('<%= item._id %>')">Delete</a>
+                  <a href="#" onclick="deleteItem('<%= item._id %>','<%= listTitle %>')">Delete</a>
                 </div>
               </div>
             </div>
@@ -161,32 +161,45 @@
             }
         }
         // Function to mark an item as completed
-  function markCompleted(itemId) {
+  function markCompleted(itemId,listTitle) {
     var form = document.createElement('form');
     form.method = 'post';
-    form.action = '/completed'; // Route to mark as completed
+    form.action = '/delete'; // Route to mark as completed
 
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'completedCheckbox';
-    input.value = itemId;
-    form.appendChild(input);
+    var inputId = document.createElement('input');
+    inputId.type = 'hidden';
+    inputId.name = 'completedCheckbox';
+    inputId.value = itemId;
+    form.appendChild(inputId);
+
+    var inputName = document.createElement('input');
+    inputName.type = 'hidden';
+    inputName.name = 'listTitle';
+    inputName.value = listTitle;
+    form.appendChild(inputName);
 
     document.body.appendChild(form);
     form.submit(); // Submit form to complete task
   }
 
   // Function to delete a task
-  function deleteItem(itemId) {
+  function deleteItem(itemId,listTitle) {
     var form = document.createElement('form');
     form.method = 'post';
     form.action = '/delete'; // Route to delete task
 
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'checkbox';
-    input.value = itemId;
-    form.appendChild(input);
+    var inputId = document.createElement('input');
+    inputId.type = 'hidden';
+    inputId.name = 'checkbox';
+    inputId.value = itemId;
+    form.appendChild(inputId);
+
+    var inputName = document.createElement('input');
+    inputName.type = 'hidden';
+    inputName.name = 'listTitle';
+    inputName.value = listTitle;
+    form.appendChild(inputName);
+
 
     document.body.appendChild(form);
     form.submit(); // Submit form to delete task
@@ -199,6 +212,14 @@ function openHelpModal() {
 // Close the modal
 function closeHelpModal() {
   document.getElementById("helpModal").style.display = "none";
+}
+
+function logOut(){
+    var form=document.createElement('form');
+    form.method='post';
+    form.action='/logout';
+    document.body.appendChild(form);
+    form.submit();
 }
 
 // Close the modal if user clicks outside the modal content

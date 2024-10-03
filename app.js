@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 require("dotenv").config();
 
@@ -19,6 +21,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 //  mongodb://localhost:27017
 app.use(session({secret:"secret",resave:false,saveUninitialized:false}));
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -88,7 +91,21 @@ const List = mongoose.model("List",listSchema);
 
 // let day = today.toLocaleDateString("en-US",options);
 
-
+function authenticateJWT(req,res,next){
+    const token=req.cookies.jwt;
+    
+    if(!token){
+        return res.redirect('/');
+    }
+    jwt.verify(token,process.env.TOKEN_SECRET,(err,decodedToken)=>{
+        if(err){            
+            console.log(err);
+            return res.redirect('/');
+        }
+        req.user=decodedToken;
+        next();
+    })
+}
 
 
 app.get('/',(req,res)=>{
@@ -119,12 +136,13 @@ passport.deserializeUser(async (id, done) => {
       done(error);
     }
   });
-  app.post('/login', (req, res, next) => {
+app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
       if (err) { 
         return next(err); 
       }
       if (!user) {
+        
         return res.redirect('/'); // Redirect if login fails
       }
   
@@ -133,23 +151,32 @@ passport.deserializeUser(async (id, done) => {
           return next(err); 
         }
         // Redirect the user to their custom route after login
+        const token = jwt.sign({id:user._id,username:user.username},process.env.TOKEN_SECRET,{expiresIn:'24h'});
+        
+        res.cookie('jwt',token,{httpOnly:true,maxAge:24*60*60*1000});
         return res.redirect('/' + user.username);
       });
     })(req, res, next);
   });
 
+app.post('/logout',(req,res)=>{
+    res.clearCookie('jwt');
+    res.redirect('/');
+})
+
 app.post('/register',async(req,res)=>{
     const data=(req.body.username)+Math.floor(Math.random()*1000);    
     const data1=req.body.password;
     const hashedPassword=await bcrypt.hash(data1,10);
-    console.log(data,data1);
     try {
         const user = new Register({
             username:data,
             password:hashedPassword,
         })
-        res.redirect('/'+data);
         await user.save();
+        const token = jwt.sign({id:user._id,username:user.username},process.env.TOKEN_SECRET,{expiresIn:'24h'});
+        res.cookie('jwt',token,{httpOnly:true,maxAge:24*60*60*1000});
+        return res.redirect('/'+data);
     } catch (error) {
         console.log(error);
     }
@@ -203,7 +230,7 @@ app.post('/search',async(req,res)=>{
     
 // })
 
-app.get("/complete/:listTitle",async(req,res)=>{
+app.get("/complete/:listTitle",authenticateJWT,authenticateJWT,async(req,res)=>{
        const saveListName=_.capitalize(req.params.listTitle)
        
     try{
@@ -214,7 +241,7 @@ app.get("/complete/:listTitle",async(req,res)=>{
     }
 })
 
-app.post('/complete/:listName',async(req,res)=>{
+app.post('/complete/:listName',authenticateJWT,async(req,res)=>{
     const completeTaskId=req.body.checkbox;
     const listName=req.params.listName;
 
@@ -226,7 +253,8 @@ app.post('/complete/:listName',async(req,res)=>{
     }
 })
 
-app.post('/delete-list',async(req,res)=>{
+
+app.post('/delete-list',authenticateJWT,async(req,res)=>{
     const getListName=req.body.deleteList;
     try{
         const dataList=await List.find({name:getListName});
@@ -239,10 +267,11 @@ app.post('/delete-list',async(req,res)=>{
 })
 
 
-app.get("/:customListName",async(req,res)=>{
+app.get("/:customListName",authenticateJWT,async(req,res)=>{
     const customListName = _.capitalize(req.params.customListName);
     
     const completedItems= await CompletedTask.find({});
+    
     
     const findOne = async()=>{
         try{
@@ -318,11 +347,14 @@ app.post("/", (req,res)=>{
 
 
 
-app.post("/complete",async(req,res)=>{
-    const completedTaskId=req.body.checkbox;
+app.post("/complete",authenticateJWT,async(req,res)=>{
+    const completedTaskId=req.body.completedCheckbox;
     const listNames= await CompletedTask.findOne({_id:completedTaskId});
-    const storeNames=listNames.listName;
-    // console.log(storeNames);
+    console.log(completedTaskId,listNames);
+    const storeNames=listNames;
+    console.log(storeNames);
+    
+    
     const isPresent= await CompletedTask.find({listName:storeNames});
     if(completedTaskId){
         await CompletedTask.findByIdAndRemove(completedTaskId).then(function(err){
@@ -338,10 +370,15 @@ app.post("/complete",async(req,res)=>{
     }
 })
 
-app.post("/delete",async(req,res)=>{
+app.post("/delete",authenticateJWT,async(req,res)=>{
     const checkedItemId=(req.body.checkbox);
-    const listName = req.body.listName;
+    const listName = (req.body.listTitle);
     const completedTaskId=(req.body.completedCheckbox);
+    // console.log(checkedItemId,listName);
+    // console.log(completedTaskId,listName,checkedItemId);
+    
+    
+    
         if(checkedItemId){
         
             try{
@@ -356,7 +393,6 @@ app.post("/delete",async(req,res)=>{
                 const findOtherListTaskName= await List.findOne(
                 {name:listName,"items._id":otherListTaskId},{ "items.$": 1 }
             );            
-            
             if(findOtherListTaskName){
                 const completedTask= new CompletedTask({
                     listName:listName,
@@ -366,13 +402,14 @@ app.post("/delete",async(req,res)=>{
                 await List.findOneAndUpdate({name:listName},{$pull:{items:{_id:completedTaskId}}});
                 res.redirect("/"+listName);
             }else{
-                console.log(error);
+                console.log("Error");
             }                  
     }catch(error){
         console.log(error);
     }
 }
 });
+
 
 
     
