@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDoList</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -12,7 +14,7 @@
         <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
         <h1><%=listTitle%></h1>
         <div class="profile-image-container">
-          <img src="image.png" alt="User Profile" class="profile-image" id="profileImage">
+          <img src="image.jpg" alt="User Profile" class="profile-image" id="profileImage">
         </div>
         
     </div>
@@ -21,10 +23,12 @@
         <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
         <button class="sidebar-btn create-btn" onclick="openModal()">
             &#43; Create</button>
-        <button class="sidebar-btn">All Tasks</button>
-        <button class="sidebar-btn">Starred</button>
-        <button class="sidebar-btn">Today's Tasks</button>
-        <button class="sidebar-btn">Logout</button>
+        <button class="sidebar-btn"><i class="fas fa-check-circle"></i>
+          All Tasks</button>
+        <button class="sidebar-btn"><i class="fas fa-star"></i>
+          Starred</button>
+        <button class="sidebar-btn"><i class="fas fa-calendar"></i> Today's Tasks</button>
+        <button class="sidebar-btn"><span class="material-icons">exit_to_app</span> Logout</button>
     </div>
     <!-- Modal for Creating Task -->
     <div id="taskModal" class="modal">
