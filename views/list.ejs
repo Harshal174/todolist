@@ -11,6 +11,9 @@
      <div class="navbar">
         <span class="hamburger" onclick="toggleSidebar()">&#9776;</span>
         <h1><%=listTitle%></h1>
+        <div class="profile-image-container">
+          <img src="image.png" alt="User Profile" class="profile-image" id="profileImage">
+        </div>
         
     </div>
     <!-- Sidebar -->
@@ -47,9 +50,10 @@
         </div>
         </div>
     <div class="box">
-            <!-- <h1><%=listTitle%></h1> -->
+      <h1 id="heading"><%= listTitle %></h1>
         <% newListItems.forEach(function(item){ %>
             <div class="item">
+              
               <!-- Task name -->
               <p><%= item.name %></p>
               
@@ -68,9 +72,6 @@
             </div>
           <% }) %>
         
-          <!-- Completed tasks link -->
-          <a class="completed-tag" style="text-decoration: none;" href="/complete/<%= listTitle %>">Completed Tasks</a>
-        
           <!-- Add a new task field with a three-dotted option on the right -->
           <div class="add-task">
             <form class="" action="/" method="post" style="display: inline-block;">
@@ -88,6 +89,10 @@
               </div>
             </div>
           </div>
+          
+          <!-- Completed tasks link -->
+          <a class="completed-tag" style="text-decoration: none;" href="/complete/<%= listTitle %>">Completed Tasks</a>
+        
     </div>
     <script>
         function toggleSidebar() {
