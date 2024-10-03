@@ -11,8 +11,16 @@ html {
   background-color: #000; /* Semi-transparent background to see the blur effect */
   backdrop-filter: blur(10px);
   margin: 0;
+  padding-right: 20px;
+  justify-content: center;
   display: flex;
+  position: relative;
   align-items: center;
+}
+.navbar h1 {
+  color: white;
+  font-size: 24px;
+  margin: 0;
 }
 
 .hamburger {
@@ -20,26 +28,83 @@ html {
   color: white;
   padding-left: 15px;
   cursor: pointer;
+  position: absolute;
+  left: 20px; 
 }
 .profile-image-container {
   display: inline-flex;
-  right: 0;
+  position: absolute;
+  right: 20px; 
   justify-content: center;
   align-items: center;
-  width: 60px; /* Adjust size as needed */
-  height: 60px;
+  width: 30px; /* Adjust size as needed */
+  height: 30px;
   border-radius: 50%;
   background-color: #f0f0f0; /* Light gray background like Instagram */
   overflow: hidden;
   border: 2px solid #ddd; /* Slight border around the profile image */
 }
+.profile-image-container i{
+  object-fit: cover;
+  justify-content: center;
 
+}
 .profile-image {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Makes sure image fits within the circular area */
 }
+/* Help button */
+.help-btn {
+  color: white;
+  background-color: #000;
+  border: none;
+  position: absolute;
+  right: 20px; 
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.help-btn i{
+  color: white;
+}
 
+/* Modal styling */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Background overlay */
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Close button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover, .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 /* Sidebar styling */
 .sidebar {
   height: 100%;
@@ -217,7 +282,7 @@ h1 {
   color: #fff;
   background-color: #333;
   margin: 10px 0;
-  border: 1px solid #ccc;
+  border: 1px solid #333;
   border-radius: 5px;
   box-sizing: border-box;
   font-size: 16px;
@@ -388,21 +453,21 @@ footer {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
+  background-color: #000;
   min-width: 100px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
 .dropdown-content a {
-  color: black;
+  color: white;
   padding: 8px 12px;
   text-decoration: none;
   display: block;
 }
 
 .dropdown-content a:hover {
-  background-color: #f1f1f1;
+  background-color: #333;
 }
 
 .dropdown:hover .dropdown-content {
