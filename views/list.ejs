@@ -17,8 +17,43 @@
         <div class="profile-image-container">
           <i class="fas fa-user-circle"></i>
           <!-- <img src="image.jpg" alt="User Profile" class="profile-image" id="profileImage"> -->
-        </div>        
+        </div>  
+        <button class="help-btn" style="right: 80px; padding: 0;" onclick="openHelpModal()"><i class="fas fa-question-circle"></i></button>
+      
     </div>
+     <!-- Help Modal -->
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeHelpModal()">&times;</span>
+    <!-- <h2>Help Information</h2>
+    <p id="help-info">Here you can add information later, such as guidelines or tips for the user.</p> -->
+    <div id="popup" class="hidden absolute z-10 w-64 p-4 bg-card text-card-foreground border border-border rounded-lg shadow-lg">
+      <h3 class="font-bold mb-2">Keyboard Shortcuts</h3>
+      <div class="mb-4">
+        <h4 class="font-semibold">Navigation</h4>
+        <ul class="list-disc list-inside">
+          <li>Focus previous: Up</li>
+          <li>Focus next: Down</li>
+          <li>Focus first: Home</li>
+          <li>Focus last: End</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold">Task actions</h4>
+        <ul class="list-disc list-inside">
+          <li>Create: C</li>
+          <li>Mark complete/incomplete: Space</li>
+          <li>Edit: Return, Enter</li>
+          <li>Delete: Backspace, Delete</li>
+          <li>Move task up/down: Ctrl+Up/Down</li>
+          <li>Move task to top/bottom: Ctrl+Shift+Up/Down</li>
+          <li>Indent: Ctrl + ]</li>
+          <li>Unindent: Ctrl + [</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
@@ -156,6 +191,23 @@
     document.body.appendChild(form);
     form.submit(); // Submit form to delete task
   }
+  // Open the modal
+function openHelpModal() {
+  document.getElementById("helpModal").style.display = "block";
+}
+
+// Close the modal
+function closeHelpModal() {
+  document.getElementById("helpModal").style.display = "none";
+}
+
+// Close the modal if user clicks outside the modal content
+window.onclick = function(event) {
+  var modal = document.getElementById("helpModal");
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
     </script>
 </body>
 </html>
