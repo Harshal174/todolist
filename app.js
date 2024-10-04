@@ -183,7 +183,7 @@ app.post('/register',async(req,res)=>{
 })
 
 
-app.post('/search',async(req,res)=>{
+app.post('/search',authenticateJWT,async(req,res)=>{
     const userName=_.capitalize(req.body.userName);
     try{
         const foundList=await List.findOne({name:userName});
@@ -230,7 +230,7 @@ app.post('/search',async(req,res)=>{
     
 // })
 
-app.get("/complete/:listTitle",authenticateJWT,authenticateJWT,async(req,res)=>{
+app.get("/complete/:listTitle",authenticateJWT,async(req,res)=>{
        const saveListName=_.capitalize(req.params.listTitle)
        
     try{
