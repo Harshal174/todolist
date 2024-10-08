@@ -71,8 +71,9 @@
 <!-- Modal for Creating a New List -->
 <div id="listModal" class="modal">
   <div class="modal-content">
-      <span class="close-btn" onclick="closeListModal()">&times;</span>
       <h2>Create New List</h2>
+      <!-- <span class="close-btn" onclick="closeListModal()">&times;</span> -->
+
       <form id="listForm" action="/createList" method="post">
           <label for="listName">List Name:</label>
           <input type="text" id="listName" name="listName" placeholder="Enter list name" required>
@@ -82,11 +83,13 @@
               <div class="task-item">
                   <label for="taskName">Task Name:</label>
                   <input type="text" name="taskName" placeholder="Task Name" required>
-
-                  <label for="taskDate">Due Date:</label>
+                  <br>
+                  <label for="taskDate">Date:</label>
+                  <br>
                   <input type="date" name="taskDate" required>
-
+                  <br>
                   <label for="taskPriority">Priority:</label>
+                  <br>
                   <select name="taskPriority" required>
                       <option value="High">High</option>
                       <option value="Intermediate">Intermediate</option>
@@ -228,17 +231,18 @@
           taskDiv.innerHTML = `
               <label for="taskName">Task Name:</label>
               <input type="text" name="taskName" placeholder="Task Name" required>
-  
-              <label for="taskDate">Due Date:</label>
+              <br>
+              <label for="taskDate">Date:</label>
+              <br>
               <input type="date" name="taskDate" required>
-  
-              <label for="taskPriority">Priority:</label>
+              <br>
+              <label for="taskPriority">Priority:</label><br>
               <select name="taskPriority" required>
                   <option value="High">High</option>
                   <option value="Intermediate">Intermediate</option>
                   <option value="Low">Low</option>
               </select>
-              <button type="button" onclick="removeTask(this)">Remove Task</button>
+              <button type="button" onclick="removeTask(this)">&times</button>
           `;
   
           tasksContainer.appendChild(taskDiv);
