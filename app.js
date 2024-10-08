@@ -70,6 +70,7 @@ const CompletedTask=mongoose.model("CompletedTask",completedTaskSchema);
 const registerSchema=new mongoose.Schema({
     username:{type:String,required:true,unique:true},
     password:{type:String,required:true},
+    listNames:[]
 })
 
 const Register=mongoose.model("Register",registerSchema);
@@ -208,6 +209,7 @@ passport.deserializeUser(async (id, done) => {
   });
 app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
+        console.log(user);
       if (err) { 
         return next(err); 
       }
@@ -237,11 +239,13 @@ app.post('/logout',(req,res)=>{
 app.post('/register',async(req,res)=>{
     const data=(req.body.username)+Math.floor(Math.random()*1000);    
     const data1=req.body.password;
+    const listNames = data;
     const hashedPassword=await bcrypt.hash(data1,10);
     try {
         const user = new Register({
             username:data,
             password:hashedPassword,
+            listNames:listNames
         })
         await user.save();
         const token = jwt.sign({id:user._id,username:user.username},process.env.TOKEN_SECRET,{expiresIn:'24h'});
@@ -384,6 +388,7 @@ app.get("/:customListName",authenticateJWT,async(req,res)=>{
 app.post("/", (req,res)=>{
      const itemName = req.body.newItem;
      const listName = req.body.list;
+     
 
      const cleanedItemName = itemName.replace(/\s+/g, ' ').trim();
      
@@ -402,6 +407,7 @@ app.post("/", (req,res)=>{
                 try{
                     const data2 = await List.findOne({name:listName});
                         data2.items.push(item);
+                        console.log(data2);
                         data2.save();
                         res.redirect("/"+ listName);   
                 }catch(err){
