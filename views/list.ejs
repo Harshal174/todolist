@@ -55,40 +55,52 @@
   </div>
 </div>
     <!-- Sidebar -->
-    <div id="sidebar" class="sidebar">
-        <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
-        <button class="sidebar-btn create-btn" onclick="openModal()">
-            &#43; Create</button>
-        <button class="sidebar-btn"><i class="fas fa-check-circle"></i>
-          All Tasks</button>
-        <button class="sidebar-btn"><i class="fas fa-star"></i>
-          Starred</button>
-        <button class="sidebar-btn"><i class="fas fa-calendar"></i> Today's Tasks</button>
-        <button id="logout-btn" class="sidebar-btn" onclick="logOut()" ><span class="material-icons" >exit_to_app</span> Logout</button>
-    </div>
-    <!-- Modal for Creating Task -->
-    <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>Add New Task</h2>
-            <form action="/addTask" method="post">
-                <label for="taskTitle">Add Title</label>
-                <input type="text" id="taskTitle" name="taskTitle" placeholder="Task Title" required>
-                
-                <label for="taskDate">Choose Date</label>
-                <input type="date" id="taskDate" name="taskDate" required>
+<div id="sidebar" class="sidebar">
+  <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
+  <button class="sidebar-btn create-btn" onclick="openListModal()">
+      &#43; Create List
+  </button>
+  <button class="sidebar-btn"><i class="fas fa-check-circle"></i> All Tasks</button>
+  <button class="sidebar-btn"><i class="fas fa-star"></i> Starred</button>
+  <button class="sidebar-btn"><i class="fas fa-calendar"></i> Today's Tasks</button>
+  <button id="logout-btn" class="sidebar-btn" onclick="logOut()">
+      <span class="material-icons">exit_to_app</span> Logout
+  </button>
+</div>
 
-                <label for="taskPriority">Priority</label>
-                <select id="taskPriority" name="taskPriority" required>
-                    <option value="high">High</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="low">Low</option>
-                </select>
+<!-- Modal for Creating a New List -->
+<div id="listModal" class="modal">
+  <div class="modal-content">
+      <span class="close-btn" onclick="closeListModal()">&times;</span>
+      <h2>Create New List</h2>
+      <form id="listForm" action="/createList" method="post">
+          <label for="listName">List Name:</label>
+          <input type="text" id="listName" name="listName" placeholder="Enter list name" required>
 
-                <button type="submit">Done</button>
-            </form>
-        </div>
-        </div>
+          <h3>Add Tasks</h3>
+          <div id="tasksContainer">
+              <div class="task-item">
+                  <label for="taskName">Task Name:</label>
+                  <input type="text" name="taskName" placeholder="Task Name" required>
+
+                  <label for="taskDate">Due Date:</label>
+                  <input type="date" name="taskDate" required>
+
+                  <label for="taskPriority">Priority:</label>
+                  <select name="taskPriority" required>
+                      <option value="High">High</option>
+                      <option value="Intermediate">Intermediate</option>
+                      <option value="Low">Low</option>
+                  </select>
+              </div>
+          </div>
+          <button type="button" onclick="addTask()">Add Another Task</button>
+
+          <button type="submit">Create List</button>
+      </form>
+  </div>
+</div>
+
     <div class="box">
       <h1 id="heading"><%= listTitle %></h1>
         <% newListItems.forEach(function(item){ %>
@@ -113,122 +125,177 @@
           <% }) %>
         
           <!-- Add a new task field with a three-dotted option on the right -->
-          <div class="add-task">
-            <form class="" action="/" method="post" style="display: inline-block;">
-              <input type="text" name="newItem" placeholder="Add a new task" autocomplete="off">
-              <button type="submit" name="list" value="<%= listTitle %>">+</button>
-            </form>
-        
-            <!-- Three-dotted button for dropdown (New task options, could be extra features like priorities, tags, etc.) -->
-            <div class="dropdown" style="display: inline-block;">
-              <button class="dropdown-btn">⋮</button>
-              <div class="dropdown-content">
-                <!-- Options for new task (These could be extended to handle priorities, etc.) -->
-                <a href="#">Set Priority</a>
-                <a href="#">Add Tag</a>
-              </div>
-            </div>
-          </div>
           
           <!-- Completed tasks link -->
           <a class="completed-tag" style="text-decoration: none;" href="/complete/<%= listTitle %>">Completed Tasks</a>
         
     </div>
     <script>
-        function toggleSidebar() {
-            var sidebar = document.getElementById("sidebar");
-            if (sidebar.style.width === "250px") {
-                sidebar.style.width = "0";
-            } else {
-                sidebar.style.width = "250px";
-            }
-        }
-        // Open Modal to Add Task
-        function openModal() {
-            document.getElementById("taskModal").style.display = "block";
-        }
-
-        // Close Modal
-        function closeModal() {
-            document.getElementById("taskModal").style.display = "none";
-        }
-
-        // Close the modal when clicking outside the modal content
-        window.onclick = function(event) {
-            var modal = document.getElementById("taskModal");
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-        // Function to mark an item as completed
-  function markCompleted(itemId,listTitle) {
-    var form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/delete'; // Route to mark as completed
-
-    var inputId = document.createElement('input');
-    inputId.type = 'hidden';
-    inputId.name = 'completedCheckbox';
-    inputId.value = itemId;
-    form.appendChild(inputId);
-
-    var inputName = document.createElement('input');
-    inputName.type = 'hidden';
-    inputName.name = 'listTitle';
-    inputName.value = listTitle;
-    form.appendChild(inputName);
-
-    document.body.appendChild(form);
-    form.submit(); // Submit form to complete task
-  }
-
-  // Function to delete a task
-  function deleteItem(itemId,listTitle) {
-    var form = document.createElement('form');
-    form.method = 'post';
-    form.action = '/delete'; // Route to delete task
-
-    var inputId = document.createElement('input');
-    inputId.type = 'hidden';
-    inputId.name = 'checkbox';
-    inputId.value = itemId;
-    form.appendChild(inputId);
-
-    var inputName = document.createElement('input');
-    inputName.type = 'hidden';
-    inputName.name = 'listTitle';
-    inputName.value = listTitle;
-    form.appendChild(inputName);
-
-
-    document.body.appendChild(form);
-    form.submit(); // Submit form to delete task
-  }
-  // Open the modal
-function openHelpModal() {
-  document.getElementById("helpModal").style.display = "block";
-}
-
-// Close the modal
-function closeHelpModal() {
-  document.getElementById("helpModal").style.display = "none";
-}
-
-function logOut(){
-    var form=document.createElement('form');
-    form.method='post';
-    form.action='/logout';
-    document.body.appendChild(form);
-    form.submit();
-}
-
-// Close the modal if user clicks outside the modal content
-window.onclick = function(event) {
-  var modal = document.getElementById("helpModal");
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-    </script>
+      // Toggle Sidebar
+      function toggleSidebar() {
+          var sidebar = document.getElementById("sidebar");
+          if (sidebar.style.width === "250px") {
+              sidebar.style.width = "0";
+          } else {
+              sidebar.style.width = "250px";
+          }
+      }
+  
+      // Open and Close List Modal
+      function openListModal() {
+          document.getElementById("listModal").style.display = "block";
+      }
+  
+      function closeListModal() {
+          document.getElementById("listModal").style.display = "none";
+      }
+  
+      // Close the modal when clicking outside the modal content
+      window.onclick = function(event) {
+          var listModal = document.getElementById("listModal");
+          var helpModal = document.getElementById("helpModal");
+          if (event.target == listModal) {
+              listModal.style.display = "none";
+          }
+          if (event.target == helpModal) {
+              helpModal.style.display = "none";
+          }
+      }
+  
+      // Function to mark an item as completed
+      function markCompleted(itemId, listTitle) {
+          var form = document.createElement('form');
+          form.method = 'post';
+          form.action = '/complete/' + listTitle; // Route to mark as completed
+  
+          var inputId = document.createElement('input');
+          inputId.type = 'hidden';
+          inputId.name = 'completedCheckbox';
+          inputId.value = itemId;
+          form.appendChild(inputId);
+  
+          document.body.appendChild(form);
+          form.submit(); // Submit form to complete task
+      }
+  
+      // Function to delete a task
+      function deleteItem(itemId, listTitle) {
+          var form = document.createElement('form');
+          form.method = 'post';
+          form.action = '/delete'; // Route to delete task
+  
+          var inputId = document.createElement('input');
+          inputId.type = 'hidden';
+          inputId.name = 'checkbox';
+          inputId.value = itemId;
+          form.appendChild(inputId);
+  
+          var inputName = document.createElement('input');
+          inputName.type = 'hidden';
+          inputName.name = 'listTitle';
+          inputName.value = listTitle;
+          form.appendChild(inputName);
+  
+          document.body.appendChild(form);
+          form.submit(); // Submit form to delete task
+      }
+  
+      // Help Modal Functions
+      function openHelpModal() {
+          document.getElementById("helpModal").style.display = "block";
+      }
+  
+      function closeHelpModal() {
+          document.getElementById("helpModal").style.display = "none";
+      }
+  
+      // Logout Function
+      function logOut(){
+          var form = document.createElement('form');
+          form.method = 'post';
+          form.action = '/logout';
+          document.body.appendChild(form);
+          form.submit();
+      }
+  
+      // Add Task Dynamically in List Modal
+      function addTask() {
+          var tasksContainer = document.getElementById("tasksContainer");
+  
+          var taskDiv = document.createElement('div');
+          taskDiv.classList.add('task-item');
+  
+          taskDiv.innerHTML = `
+              <label for="taskName">Task Name:</label>
+              <input type="text" name="taskName" placeholder="Task Name" required>
+  
+              <label for="taskDate">Due Date:</label>
+              <input type="date" name="taskDate" required>
+  
+              <label for="taskPriority">Priority:</label>
+              <select name="taskPriority" required>
+                  <option value="High">High</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Low">Low</option>
+              </select>
+              <button type="button" onclick="removeTask(this)">Remove Task</button>
+          `;
+  
+          tasksContainer.appendChild(taskDiv);
+      }
+  
+      // Remove Task Dynamically
+      function removeTask(button) {
+          var taskItem = button.parentElement;
+          taskItem.remove();
+      }
+  
+      // Function to open Task Modal for Editing
+      function openTaskModal(id = '', name = '', date = '', priority = 'Medium') {
+          document.getElementById("taskModal").style.display = "block";
+          document.getElementById('modal-title').innerText = id ? 'Edit Task' : 'Add a New Task';
+  
+          // If editing, pre-fill the form fields
+          document.getElementById('taskId').value = id;
+          document.getElementById('taskName').value = name;
+          document.getElementById('taskDate').value = date;
+          document.getElementById('taskPriority').value = priority;
+      }
+  
+      // Close Task Modal
+      function closeTaskModal() {
+          document.getElementById("taskModal").style.display = "none";
+      }
+  
+      // Handle Form Submission for Task Modal
+      function submitTask(event) {
+          event.preventDefault(); // Prevent form from submitting traditionally
+  
+          const form = document.getElementById('taskForm');
+          const taskId = form.taskId.value;
+          const taskName = form.taskName.value;
+          const taskDate = form.taskDate.value;
+          const taskPriority = form.taskPriority.value;
+  
+          const formData = new FormData();
+          formData.append('name', taskName);
+          formData.append('date', taskDate);
+          formData.append('priority', taskPriority);
+  
+          if (taskId) {
+              formData.append('id', taskId); // For editing, pass the task ID
+              formData.append('_method', 'PUT'); // Indicate it's an edit request
+          }
+  
+          fetch('/tasks', {
+              method: taskId ? 'PUT' : 'POST', // POST for new task, PUT for edit
+              body: formData
+          }).then(() => {
+              closeTaskModal();
+              location.reload(); // Refresh the page to show updated task
+          });
+      }
+  </script>
+  
 </body>
 </html>

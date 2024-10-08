@@ -34,7 +34,11 @@ async function main() {
 // mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true});
 
 const itemsSchema = {
-    name:String
+    name:String,
+    date: Date,
+    priority: String,
+    starred: { type: Boolean, default: false } // Optional: For starred tasks
+
 };
 const Item = mongoose.model("item",itemsSchema);
 // const Item1= new Item({
@@ -74,6 +78,72 @@ const listSchema = {
     name: String,
     items: [itemsSchema]
 };
+// Add this route in app.js
+
+app.get('/dashboard', authenticateJWT, async (req, res) => {
+    try {
+        const lists = await List.find({});
+        res.render('list', { lists: lists });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+app.post('/createList', authenticateJWT, async (req, res) => {
+    const listName = req.body.listName.trim();
+    const taskNames = req.body.taskName;
+    const taskDates = req.body.taskDate;
+    const taskPriorities = req.body.taskPriority;
+
+    // Ensure listName is provided
+    if (!listName) {
+        return res.status(400).send("List name is required.");
+    }
+
+    // Ensure tasks are provided
+    if (!taskNames || !taskDates || !taskPriorities) {
+        return res.status(400).send("At least one task is required.");
+    }
+
+    // If single task, wrap in arrays
+    const tasks = [];
+    if (typeof taskNames === 'string') {
+        tasks.push({
+            name: taskNames.trim(),
+            date: taskDates,
+            priority: taskPriorities
+        });
+    } else {
+        for (let i = 0; i < taskNames.length; i++) {
+            const name = taskNames[i].trim();
+            const date = taskDates[i];
+            const priority = taskPriorities[i];
+
+            if (name && date && priority) { // Validate each task
+                tasks.push({ name, date, priority });
+            }
+        }
+    }
+
+    // Create the list with tasks
+    const newList = new List({
+        name: listName,
+        items: tasks.map(task => ({
+            name: task.name,
+            date: task.date,
+            priority: task.priority
+        }))
+    });
+
+    try {
+        await newList.save();
+        res.redirect('/' + listName);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error creating the list.");
+    }
+});
 
 const List = mongoose.model("List",listSchema);
 
@@ -417,4 +487,4 @@ app.post("/delete",authenticateJWT,async(req,res)=>{
 
 app.listen(process.env.PORT||3000,()=>{
     console.log("Server started on port 3000!!!");
-})
+})  
