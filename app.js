@@ -53,7 +53,7 @@ const Item = mongoose.model("item",itemsSchema);
 //     name:"<-- Hit this to delete an item."
 // });
 
-
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 const defaultItems=[];
 
 const completedTaskSchema={
@@ -79,12 +79,12 @@ const listSchema = {
     name: String,
     items: [itemsSchema]
 };
-// Add this route in app.js
+
 
 app.get('/dashboard', authenticateJWT, async (req, res) => {
     try {
         const lists = await List.find({});
-        res.render('list', { lists: lists });
+        res.render('list', { list: lists });
     } catch (err) {
         console.error(err);
         res.status(500).send("Internal Server Error");
@@ -96,17 +96,23 @@ app.post('/createList', authenticateJWT, async (req, res) => {
     const taskNames = req.body.taskName;
     const taskDates = req.body.taskDate;
     const taskPriorities = req.body.taskPriority;
-
-    // Ensure listName is provided
-    if (!listName) {
+    const oldList=await List.findOne({name:listName});
+     // Ensure listName is provided
+     if (!listName) {
         return res.status(400).send("List name is required.");
     }
-
-    // Ensure tasks are provided
-    if (!taskNames || !taskDates || !taskPriorities) {
+     // Ensure tasks are provided
+     if (!taskNames || !taskDates || !taskPriorities) {
         return res.status(400).send("At least one task is required.");
     }
-
+    console.log(oldList);
+    
+    if(oldList){
+       const updatedList= await List.findOneAndUpdate({name:listName},{$push:{items:{name:taskNames,date:taskDates,priority:taskPriorities}}});
+       updatedList.save(); 
+       console.log(updatedList);
+    }
+    
     // If single task, wrap in arrays
     const tasks = [];
     if (typeof taskNames === 'string') {
@@ -115,6 +121,7 @@ app.post('/createList', authenticateJWT, async (req, res) => {
             date: taskDates,
             priority: taskPriorities
         });
+        console.log(tasks);
     } else {
         for (let i = 0; i < taskNames.length; i++) {
             const name = taskNames[i].trim();
@@ -127,23 +134,37 @@ app.post('/createList', authenticateJWT, async (req, res) => {
         }
     }
 
-    // Create the list with tasks
-    const newList = new List({
-        name: listName,
-        items: tasks.map(task => ({
-            name: task.name,
-            date: task.date,
-            priority: task.priority
-        }))
-    });
-
-    try {
+    if(!oldList){
+        // Create the list with tasks
+        const newList = new List({
+            name: listName,
+            items: tasks.map(task => ({
+                name: task.name,
+                date: task.date,
+                priority: task.priority
+            }))
+        });
         await newList.save();
         res.redirect('/' + listName);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error creating the list.");
+    }else{
+        console.log("Error");
     }
+    
+    
+    
+
+   
+
+   
+    
+
+    // try {
+    //     await newList.save();
+    //     res.redirect('/' + listName);
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).send("Error creating the list.");
+    // }
 });
 
 const List = mongoose.model("List",listSchema);
@@ -342,12 +363,13 @@ app.post('/delete-list',authenticateJWT,async(req,res)=>{
 
 
 app.get("/:customListName",authenticateJWT,async(req,res)=>{
+    
     const customListName = _.capitalize(req.params.customListName);
     
     const completedItems= await CompletedTask.find({});
-    
-    
     const findOne = async()=>{
+      
+       if(req.user.username===req.params.customListName.toLowerCase()){
         try{
             const data1=await List.findOne({name: customListName});
             // console.log(data1);  
@@ -365,6 +387,10 @@ app.get("/:customListName",authenticateJWT,async(req,res)=>{
             console.error(err);
             res.status(500).send("Internal Server Error");
         }
+       }else{
+         res.json({message:"Access Denied"});
+       }
+       
     }
 
     findOne();
